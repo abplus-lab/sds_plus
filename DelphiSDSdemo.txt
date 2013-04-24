@@ -1,0 +1,90 @@
+$Id: DelphiSDSdemo.txt 270 2003-03-11 02:52:54Z kazhida $
+$Author: kazhida $
+
+-------------------------
+Delphi-SDS demo について
+-------------------------
+
+DelphiでSDSアプリケーションを作るサンプルです。
+DelphiSDSdemo.dllをIntelliCADに、xloadすると以下の関数とコマンドが
+使用できるようになります。
+
+resview     引数で渡されたリスト(result buffer)について
+            リスト構造(画面左側)とバッファの内容(画面右側)を
+            表示する関数。
+            ex:   (resview 1 2 '(3 4 "5" 6 (7 8) 9))
+
+c:selview   図形を選択するプロンプトがでてくるので、
+            何か図形をクリックすると、その内容を
+            resviewで表示するコマンド。
+
+c:dictview  namedobjdictの結果を
+            resviewで表示するコマンド。
+
+c:entview   entgetで得られるエンティティの一覧を表示し、
+            リスト上でダブルクリックすると
+            そのエンティティの内容を、子フォームに
+            表示するコマンド。
+
+c:tblview   TABLESの内容について、c:entview見たいなことを
+            するコマンド。
+
+restypeinfo 引数として渡したResBufのrestype(DXFのグループコード）に対応する
+            説明とバッファ内のデータ型を文字列として返す関数
+            ex  : (restypeinfo 62)
+                "カラー番号 *【16bit整数】" 
+                : (restypeinfo 10)
+                "主要な3D座標 DXFではX座標【3D(または2D)座標】" 
+
+同梱しているファイル構成は、以下の通りです。
+
+SDScore.pas             icad.exeがexportしているAPIのexternal宣言、
+                        必要な型定義、
+                        APIをよりLisp関数ライクにしたラッパー(一部APIのみ)
+                        EntryPoint関連のお約束コード
+                        をまとめたユニット。
+                        これ一つあれば、それなりにDelphiでSDSアプリを
+                        作れるようになっています。
+
+DelphiSDSdemo.dpr       DelphiSDSdemo.dllのプロジェクトファイル
+                        上記のコマンド(関数)の実体は、ここで定義しています。
+                        DelphiのIDEでは、普通は表示しないので、
+                        プロジェクト・マネージャで、DelphiSDSdemo.dllを
+                        右クリックして、「ソース表示」で開いてください。
+
+ViewerForm.pas[.dfm]    resview系の関数やコマンドで使用しているフォーム
+
+ListForm.pas[.dfm]      c:entview、c:tblviewで使用しているMDI親フォーム
+
+EntForm.pas[.dfm]       c:entview、c:tblviewで使用しているMDI子フォーム
+
+DemoUtils.pas           restypeinfoの定義と、
+                        ユニットの初期化部でのユーザ定義関数登録のサンプル
+
+MiniPad.pas[.dfm]       未使用(デバッグや実験の時に使うためのもの)
+                        # 本当は、evalを実現しようとして作ったのだけど
+                        # 挫折したので、そのままユーティリティ的に
+                        # 残してあるだけ。
+                        # このフォームを表示するコマンドは、
+                        # DelphiSDSdemo.dpr内で、コメントアウトしている
+
+SDSplusList.dcu         ResBufをラップするTSdsListクラスを定義している
+                        ユニット(コンパイル済み)
+
+ちなみに、c:entview、c:tblviewは、SDSでMDIなフォームを使うための
+サンプルにもなっています。
+# この形に落ち着くまで、結構、試行錯誤しました。
+# DelphiのMDI(一部では、似非MDIともいわれる)が、特殊なのと
+# DLLからフォームを使うのが特殊なのが相まって、
+# 内部的には、かなり複雑なことになってるみたいです。
+# 実際、今の形で本当に大丈夫なのかは、確信できていません。
+
+ソースは、一部を除いて、BSDライセンスにしてある(ソースの冒頭参照)ので、
+その条件に従うかぎり、自由に利用することができます。
+# SDSplusListについては、ちと公開できない理由があったりしますので、
+# 勘弁してください。
+
+----- - ----- - ----- - ----- - ----- - ----- - ----- - ----- - -----
+Copyright (C) 2003 ABplus Inc. kazHIDA
+All rights reserved.
+mailto:kazhida@abplus.com
